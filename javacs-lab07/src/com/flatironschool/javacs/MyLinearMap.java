@@ -63,8 +63,12 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 * @param target
 	 */
 	private Entry findEntry(Object target) {
-        // TODO: fill this in
-		return null;
+		for (Entry entry: entries){
+			if (equals(entry.getKey(), target)){
+				return entry;
+			} // end if
+		} // end for
+		return null; // if we haven't returned an entry yet
 	}
 
 	/**
@@ -99,6 +103,10 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	@Override
 	public V get(Object key) {
         // TODO: fill this in.
+        Entry keyEntry = findEntry(key);
+        if (keyEntry != null){
+        	return keyEntry.getValue();
+        }
 		return null;
 	}
 
@@ -116,10 +124,21 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 		return set;
 	}
 
+	// Associates the specified value with the specified key in this map (optional operation). 
+	// If the map previously contained a mapping for the key, the old value is replaced by the 
+	// specified value. (A map m is said to contain a mapping for a key k if and only if m.containsKey(k)
+	// would return true.)
 	@Override
 	public V put(K key, V value) {
-        // TODO: fill this in.
-        return null;
+		Entry oldEntry = findEntry(key);
+		V oldVal = null;
+        if (oldEntry != null){
+        	// handle case where key already exists
+        	oldVal = oldEntry.getValue();
+        	entries.remove(oldEntry);
+        }
+        entries.add(new Entry(key, value));
+        return oldVal;
 	}
 
 	@Override
@@ -131,8 +150,14 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object key) {
-        // TODO: fill this in.
-        return null;
+        Entry oldEntry = findEntry(key);
+		V oldVal = null;
+        if (oldEntry != null){
+        	// handle case where key already exists
+        	oldVal = oldEntry.getValue();
+        	entries.remove(oldEntry);
+        }
+        return oldVal;
 	}
 
 	@Override
@@ -154,14 +179,23 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 */
 	public static void main(String[] args) {
 		Map<String, Integer> map = new MyLinearMap<String, Integer>();
-		map.put("Word1", 1);
-		map.put("Word2", 2);
-		Integer value = map.get("Word1");
-		System.out.println(value);
+		map.put("One", null);
+		map.put("One", 11);
+		//assertThat(map.size(), is(4));
+		//assertThat(map.get("One"), is(11));
 		
-		for (String key: map.keySet()) {
-			System.out.println(key + ", " + map.get(key));
-		}
+		//map.put("Five", 5);
+		//assertThat(map.size(), is(5));
+		//assertThat(map.get("Five"), is(5));
+
+		// map.put("Word1", 1);
+		// map.put("Word2", 2);
+		// Integer value = map.get("Word1");
+		// System.out.println(value);
+		
+		// for (String key: map.keySet()) {
+		// 	System.out.println(key + ", " + map.get(key));
+		// }
 	}
 
 	/**
